@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Matching Calculator ❤️</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.10.5/brython.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffe6e6;
+        }
+        .container {
+            margin-top: 100px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border: 1px solid #ff4d4d;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e63939;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body onload="brython()">
+
+    <div class="container">
+        <h2>💖 Love Matching Calculator 💖</h2>
+        <input type="text" id="name1" placeholder="Enter First Name">
+        <input type="text" id="name2" placeholder="Enter Second Name">
+        <button onclick="calculate_love()">Check Love Compatibility</button>
+        <div id="result"></div>
+    </div>
+
+    <script type="text/python">
+        from browser import document
+
+        def calculate_love():
+            name1 = document["name1"].value.strip().lower().replace(" ", "")
+            name2 = document["name2"].value.strip().lower().replace(" ", "")
+            combined_name = name1 + name2
+
+            match_score = sum(ord(char) for char in combined_name)
+
+            love_percentage = 50 + (match_score % 51)
+
+            if love_percentage > 90:
+                message = "🔥 Perfect Match! You two are made for each other! 🔥"
+            elif love_percentage > 75:
+                message = "💞 Strong Connection! A bright future ahead! 💞"
+            elif love_percentage > 50:
+                message = "😊 Good Match! With some effort, this can work well! 😊"
+            else:
+                message = "💔 Uh-oh! You might need to work a little harder on this relationship! 💔"
+
+            document["result"].html = f"<p>❤️ {name1.capitalize()} & {name2.capitalize()} ❤️</p>"
+            document["result"].html += f"<p>Your Love Compatibility: {love_percentage}%</p>"
+            document["result"].html += f"<p>{message}</p>"
+
+    </script>
+
+</body>
+</html>
