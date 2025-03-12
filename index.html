@@ -67,7 +67,7 @@
     <input type="text" id="name1" placeholder="Enter First Name">
     <input type="text" id="name2" placeholder="Enter Second Name">
     <br>
-    <button id="sendBtn">Calculate</button>
+    <button onclick="calculate_love()">Check Love Compatibility</button>
     <div id="result"></div>
     <div class="creator">
       Created by <a href="https://nirob120.netlify.app/" target="_blank">NIROB</a>
@@ -75,35 +75,43 @@
   </div>
 
   <script type="text/python">
-    from browser import document, window
+    from browser import document
 
-    def send_whatsapp(event):
-        name1 = document["name1"].value.strip()
-        name2 = document["name2"].value.strip()
+    def calculate_love(event):
+        # Get and process names
+        name1 = document["name1"].value.strip().lower().replace(" ", "")
+        name2 = document["name2"].value.strip().lower().replace(" ", "")
         
-        if not name1 or not name2:
-            window.alert("Please enter both names.")
+        if name1 == "" or name2 == "":
+            document["result"].html = "<p style='color:red;'>Please enter both names!</p>"
             return
         
-        # Calculate love percentage using ASCII values
-        combined = (name1 + name2).lower().replace(" ", "")
-        total = sum(ord(c) for c in combined)
-        love_percentage = 50 + (total % 51)  # Value between 50 and 100
-        
-        message = f"Names: {name1} and {name2}\nLove Percentage: {love_percentage}%"
-        
-        # Ask for user's permission to send the message via WhatsApp
-        permission = window.confirm("Do you allow sending the following message via WhatsApp?\n\n" + message)
-        
-        if permission:
-            encodedMessage = window.encodeURIComponent(message)
-            phoneNumber = "8801870516299"  # WhatsApp international format (without plus or dashes)
-            url = f"https://wa.me/{phoneNumber}?text=" + encodedMessage
-            window.open(url, "_blank")
+        combined_name = name1 + name2
+
+        # Calculate match score based on ASCII values
+        match_score = sum(ord(char) for char in combined_name)
+        love_percentage = 50 + (match_score % 51)  # Percentage between 50 and 100
+
+        # Determine message based on score
+        if love_percentage > 90:
+            message = "🔥 Perfect Match! You two are made for each other! 🔥"
+        elif love_percentage > 75:
+            message = "💞 Strong Connection! A bright future ahead! 💞"
+        elif love_percentage > 50:
+            message = "😊 Good Match! With some effort, this can work well! 😊"
         else:
-            window.alert("Message sending cancelled.")
-    
-    document["sendBtn"].bind("click", send_whatsapp)
+            message = "💔 Uh-oh! You might need to work a little harder on this relationship! 💔"
+
+        # Update the result div with the computed values
+        result_html = f"<p>❤️ {name1.capitalize()} & {name2.capitalize()} ❤️</p>"
+        result_html += f"<p>Your Love Compatibility: {love_percentage}%</p>"
+        result_html += f"<p>{message}</p>"
+        document["result"].html = result_html
+
+    # Bind the function to the button click event
+    document["name1"].bind("change", calculate_love)
+    document["name2"].bind("change", calculate_love)
+    # Alternatively, the button click will call calculate_love with the event argument.
   </script>
 </body>
 </html>
